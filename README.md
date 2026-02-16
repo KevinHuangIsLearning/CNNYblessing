@@ -2,6 +2,10 @@
 
 一个新中式风格的除夕祝福贺卡网页。
 
+🔗 **在线生成器：** https://kevinhuangislearning.github.io/CNNYblessing/generate.html
+
+🎀 **样例效果：** https://kevinhuangislearning.github.io/CNNYblessing/
+
 ## 功能特点
 
 - 🎨 新中式设计风格，浅米色宣纸质感背景
