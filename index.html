@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>岁华新至，感念师恩</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "KaiTi", "STKaiti", "SimSun", "STSong", "Songti SC", serif;
+            background-color: #f5f0e6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #ffd700, #daa520);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .border-frame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .border-top, .border-bottom, .border-left, .border-right {
+            position: absolute;
+            background: repeating-linear-gradient(
+                90deg,
+                #8b2323 0px,
+                #a52a2a 20px,
+                #8b2323 40px
+            );
+        }
+
+        .border-top, .border-bottom {
+            height: 20px;
+            left: 0;
+            right: 0;
+        }
+
+        .border-top {
+            top: 0;
+        }
+
+        .border-bottom {
+            bottom: 0;
+        }
+
+        .border-left, .border-right {
+            width: 20px;
+            top: 0;
+            bottom: 0;
+        }
+
+        .border-left {
+            left: 0;
+        }
+
+        .border-right {
+            right: 0;
+        }
+
+        .scroll-container {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            perspective: 1000px;
+        }
+
+        .scroll {
+            position: relative;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(135deg, #faf6ef 0%, #f0e8d8 100%);
+            border: 3px solid #8b4513;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: scrollOpen 2s ease-out forwards;
+        }
+
+        @keyframes scrollOpen {
+            0% {
+                height: 0;
+            }
+            100% {
+                height: 560px;
+            }
+        }
+
+        .scroll::before, .scroll::after {
+            content: "";
+            position: absolute;
+            left: -15px;
+            right: -15px;
+            height: 30px;
+            background: linear-gradient(90deg, #654321, #8b4513, #654321);
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .scroll::before {
+            top: -15px;
+        }
+
+        .scroll::after {
+            bottom: -15px;
+        }
+
+        .scroll-content {
+            padding: 40px 30px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 2s forwards;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .title {
+            font-size: 2rem;
+            text-align: center;
+            color: #8b2323;
+            margin-bottom: 40px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            opacity: 0;
+            animation: titleFadeIn 1s ease-out 2.5s forwards;
+        }
+
+        @keyframes titleFadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .message {
+            font-size: 1.2rem;
+            line-height: 2.5;
+            color: #333;
+            text-align: left;
+            overflow: hidden;
+        }
+
+        .typing-text {
+            display: inline;
+            border-right: 2px solid #8b2323;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                border-color: #8b2323;
+            }
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        .signature {
+            text-align: right;
+            margin-top: 30px;
+            font-size: 1.3rem;
+            color: #5a1818;
+            font-family: "Times New Roman", "Palatino Linotype", "Book Antiqua", Palatino, serif;
+            font-style: italic;
+            letter-spacing: 1px;
+            opacity: 0;
+            animation: signatureFadeIn 1s ease-out 6s forwards;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .stamp {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, #c41e3a, #8b2323);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #f5f0e6;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transform: rotate(-15deg);
+            opacity: 0.85;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: stampIn 0.5s ease-out 5.5s forwards;
+        }
+
+        @keyframes signatureFadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes stampIn {
+            0% {
+                transform: rotate(-15deg) scale(3);
+                opacity: 0;
+            }
+            100% {
+                transform: rotate(-15deg) scale(1);
+                opacity: 0.85;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .scroll-container {
+                width: 85%;
+            }
+
+            @keyframes scrollOpen {
+                0% {
+                    height: 0;
+                }
+                100% {
+                    height: 620px;
+                }
+            }
+
+            .scroll-content {
+                padding: 30px 20px;
+            }
+
+            .title {
+                font-size: 1.6rem;
+                letter-spacing: 4px;
+            }
+
+            .message {
+                font-size: 1rem;
+                line-height: 2.2;
+            }
+
+            .signature {
+                font-size: 1.15rem;
+                margin-top: 25px;
+            }
+
+            .stamp {
+                width: 60px;
+                height: 60px;
+                font-size: 0.8rem;
+            }
+
+            .border-top, .border-bottom, .border-left, .border-right {
+                width: 15px;
+                height: 15px;
+            }
+
+            .scroll::before, .scroll::after {
+                left: -10px;
+                right: -10px;
+                height: 25px;
+            }
+
+            .scroll::before {
+                top: -12px;
+            }
+
+            .scroll::after {
+                bottom: -12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.4rem;
+                letter-spacing: 3px;
+            }
+
+            .message {
+                font-size: 0.95rem;
+                line-height: 2;
+            }
+
+            @keyframes scrollOpen {
+                0% {
+                    height: 0;
+                }
+                100% {
+                    height: 570px;
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-container"></div>
+
+    <div class="border-frame">
+        <div class="border-top"></div>
+        <div class="border-bottom"></div>
+        <div class="border-left"></div>
+        <div class="border-right"></div>
+    </div>
+
+    <div class="scroll-container">
+        <div class="scroll">
+            <div class="scroll-content">
+                <h1 class="title">岁华新至，感念师恩</h1>
+                <div class="message">
+                    <span class="typing-text" id="typing"></span>
+                </div>
+                <div class="signature">Kevin Huang</div>
+                <div class="stamp">2026<br>贺</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.width = (Math.random() * 3 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                name: params.get('name') || '',
+                title: params.get('title') || '老师',
+                blessing: params.get('blessing') || '新春快乐，身体安康，桃李满天下，万事皆顺遂'
+            };
+        }
+
+        function typeWriter() {
+            const { name, title, blessing } = getUrlParams();
+            let greeting = '亲爱的' + title;
+            if (name) {
+                greeting = '亲爱的' + name + title;
+            }
+            const text = greeting + "，值此除夕佳节，感谢您过去的悉心教导。\n祝您：" + blessing + "。";
+            const element = document.getElementById('typing');
+            let index = 0;
+
+            function type() {
+                if (index < text.length) {
+                    const char = text.charAt(index);
+                    if (char === '\n') {
+                        element.innerHTML += '<br>';
+                    } else {
+                        element.innerHTML += char;
+                    }
+                    index++;
+                    setTimeout(type, 100);
+                } else {
+                    element.style.borderRight = 'none';
+                }
+            }
+
+            setTimeout(type, 3000);
+        }
+
+        window.addEventListener('load', function() {
+            createParticles();
+            typeWriter();
+        });
+    </script>
+</body>
+</html>
