@@ -663,6 +663,19 @@
 
         window.addEventListener('load', function() {
             handleExport();
+            const borderFrame = document.querySelector('.border-frame');
+            const borders = document.querySelectorAll('.border-top, .border-bottom, .border-left, .border-right');
+            if (isSmallScreen() && borderFrame) {
+                borders.forEach(border => {
+                    border.style.transition = 'none';
+                });
+                borderFrame.classList.add('hide');
+                setTimeout(() => {
+                    borders.forEach(border => {
+                        border.style.transition = '';
+                    });
+                }, 100);
+            }
             setTimeout(adjustScrollHeight, 2500);
         });
 
