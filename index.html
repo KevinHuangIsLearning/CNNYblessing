@@ -288,8 +288,10 @@
             height: 1.2em;
             background-color: #8b2323;
             animation: blink 0.7s infinite;
-            vertical-align: text-bottom;
+            vertical-align: middle;
             margin-left: 2px;
+            position: relative;
+            top: 0.1em;
         }
 
         @keyframes blink {
@@ -564,9 +566,20 @@
                 if (index <= textToType.length) {
                     const currentText = textToType.substring(0, index);
                     if (message) {
-                        element.innerHTML = renderMarkdownWithKaTeX(currentText);
+                        const rendered = renderMarkdownWithKaTeX(currentText);
+                        // 寻找最后一个文本节点或内联元素，将光标插入其中
+                        element.innerHTML = rendered;
+                        
+                        // 尝试将光标移动到最后一个段落或列表项的末尾，而不是作为兄弟节点
+                        const lastChild = element.lastElementChild;
+                        if (lastChild && (lastChild.tagName === 'P' || lastChild.tagName === 'LI')) {
+                            lastChild.appendChild(cursorElement);
+                        } else {
+                            element.appendChild(cursorElement);
+                        }
                     } else {
                         element.innerHTML = currentText.replace(/\n/g, '<br>');
+                        element.appendChild(cursorElement);
                     }
                     
                     if (index < textToType.length) {
