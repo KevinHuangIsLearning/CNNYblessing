@@ -231,6 +231,11 @@
             overflow: hidden;
         }
 
+        .message * {
+            margin-top: 0 !important;
+            margin-bottom: 0.5em !important;
+        }
+
         .message p {
             margin: 0.5em 0;
         }
@@ -550,22 +555,19 @@
             let index = 0;
             
             function type() {
-                if (index < textToType.length) {
-                    const char = textToType.charAt(index);
-                    if (char === '\n') {
-                        element.innerHTML += '<br>';
-                    } else {
-                        element.innerHTML += char;
-                    }
-                    index++;
-                    setTimeout(type, isSmallScreen() ? 50 : 100);
-                } else {
-                    element.classList.remove('with-cursor');
-                    
+                if (index <= textToType.length) {
+                    const currentText = textToType.substring(0, index);
                     if (message) {
-                        setTimeout(() => {
-                            element.innerHTML = renderMarkdownWithKaTeX(message);
-                        }, 300);
+                        element.innerHTML = renderMarkdownWithKaTeX(currentText);
+                    } else {
+                        element.innerHTML = currentText.replace(/\n/g, '<br>');
+                    }
+                    
+                    if (index < textToType.length) {
+                        index++;
+                        setTimeout(type, isSmallScreen() ? 50 : 100);
+                    } else {
+                        element.classList.remove('with-cursor');
                     }
                 }
             }
