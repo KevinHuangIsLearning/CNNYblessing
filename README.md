@@ -15,6 +15,8 @@
 - 📝 红印章装饰
 - 📱 完美响应式设计，支持手机端浏览
 - 🔗 支持 URL 参数自定义内容
+  - 简单模式：分块填写名字、称呼、祝福语
+  - 高级模式：直接输入完整正文
 - 🖼️ 支持导出为 SVG 或 PNG 图片，可直接嵌入 markdown
 
 ## 使用方法
@@ -35,6 +37,8 @@
 
 通过URL参数可以动态修改贺卡内容：
 
+#### 简单模式（分块填写）
+
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
 | `name` | 名字（可选） | - |
@@ -42,6 +46,19 @@
 | `blessing` | 祝福语 | 新春快乐，身体安康，桃李满天下，万事皆顺遂 |
 | `title_text` | 标题文字 | 岁华新至，感念师恩 |
 | `signature` | 署名 | Kevin Huang |
+
+#### 高级模式（完整正文）
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `message` | 完整正文（使用后忽略简单模式参数） | - |
+| `title_text` | 标题文字 | 岁华新至，感念师恩 |
+| `signature` | 署名 | Kevin Huang |
+
+#### 导出参数
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
 | `export_to_pic` | 是否导出为图片模式 | false |
 | `png` | 导出为 PNG（仅在export_to_pic=true时有效） | false |
 
@@ -63,8 +80,11 @@ index.html?blessing=新年快乐，工作顺利，阖家幸福
 # 自定义标题和署名
 index.html?title_text=龙年大吉&signature=张三
 
-# 全部自定义
+# 全部自定义（简单模式）
 index.html?name=李&title=老师&blessing=龙年大吉，万事如意，心想事成&title_text=新春快乐&signature=李四
+
+# 完整正文自定义（高级模式）
+index.html?message=亲爱的老师，值此除夕佳节，感谢您过去的悉心教导。%0A祝您：新年快乐，万事顺遂。&title_text=新春快乐&signature=李四
 
 # 导出为SVG图片
 index.html?export_to_pic=true&name=王&title=老师
