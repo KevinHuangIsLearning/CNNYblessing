@@ -442,6 +442,7 @@
                 blessing: params.get('blessing') || '新春快乐，身体安康，桃李满天下，万事皆顺遂',
                 titleText: params.get('title_text') || '岁华新至，感念师恩',
                 signature: params.get('signature') || 'Kevin Huang',
+                message: params.get('message') || '',
                 exportToPic: params.get('export_to_pic') === 'true',
                 png: params.get('png') === 'true'
             };
@@ -452,7 +453,7 @@
         }
 
         function typeWriter() {
-            const { name, title, blessing, titleText, signature } = getUrlParams();
+            const { name, title, blessing, titleText, signature, message } = getUrlParams();
             
             document.title = titleText;
             
@@ -462,11 +463,16 @@
             const signatureElement = document.querySelector('.signature');
             signatureElement.textContent = signature;
             
-            let greeting = '亲爱的' + title;
-            if (name) {
-                greeting = '亲爱的' + name + title;
+            let text;
+            if (message) {
+                text = message;
+            } else {
+                let greeting = '亲爱的' + title;
+                if (name) {
+                    greeting = '亲爱的' + name + title;
+                }
+                text = greeting + "，值此除夕佳节，感谢您过去的悉心教导。\n祝您：" + blessing + "。";
             }
-            const text = greeting + "，值此除夕佳节，感谢您过去的悉心教导。\n祝您：" + blessing + "。";
             const element = document.getElementById('typing');
             
             let index = 0;
@@ -507,27 +513,33 @@
         }
 
         function generateSVG(params) {
-            const { name, title, blessing, titleText, signature } = params;
-            let greeting = '亲爱的' + title;
-            if (name) {
-                greeting = '亲爱的' + name + title;
+            const { name, title, blessing, titleText, signature, message } = params;
+            let messageLines = [];
+            
+            if (message) {
+                const parts = message.split('\n');
+                parts.forEach(part => {
+                    const lines = wrapText(part, 20);
+                    messageLines = messageLines.concat(lines);
+                });
+            } else {
+                let greeting = '亲爱的' + title;
+                if (name) {
+                    greeting = '亲爱的' + name + title;
+                }
+                
+                const messageLine1 = greeting + "，值此除夕佳节，感谢您过去的悉心教导。";
+                const messageLine2 = "祝您：" + blessing + "。";
+                
+                const lines1 = wrapText(messageLine1, 20);
+                const lines2 = wrapText(messageLine2, 20);
+                messageLines = lines1.concat(lines2);
             }
-            
-            const messageLine1 = greeting + "，值此除夕佳节，感谢您过去的悉心教导。";
-            const messageLine2 = "祝您：" + blessing + "。";
-            
-            const lines1 = wrapText(messageLine1, 20);
-            const lines2 = wrapText(messageLine2, 20);
             
             let messageTexts = '';
             let yPos = 350;
             
-            lines1.forEach(line => {
-                messageTexts += `<text x="150" y="${yPos}" font-family="KaiTi, STKaiti, SimSun, STSong, Songti SC, serif" font-size="28" fill="#333333">${line}</text>\n    `;
-                yPos += 50;
-            });
-            
-            lines2.forEach(line => {
+            messageLines.forEach(line => {
                 messageTexts += `<text x="150" y="${yPos}" font-family="KaiTi, STKaiti, SimSun, STSong, Songti SC, serif" font-size="28" fill="#333333">${line}</text>\n    `;
                 yPos += 50;
             });
