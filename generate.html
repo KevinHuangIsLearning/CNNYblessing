@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新年祝福贺卡 - 生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Times New Roman", "Palatino Linotype", "Book Antiqua", Palatino, "KaiTi", "STKaiti", "SimSun", "STSong", "Songti SC", serif;
+            background-color: #f5f0e6;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #8b2323;
+            margin-bottom: 40px;
+            font-size: 2rem;
+            letter-spacing: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #5a1818;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #8b4513;
+            border-radius: 5px;
+            font-family: "Times New Roman", "Palatino Linotype", "Book Antiqua", Palatino, "KaiTi", "STKaiti", "SimSun", "STSong", "Songti SC", serif;
+            font-size: 1rem;
+            background-color: #faf6ef;
+            color: #333;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #8b2323;
+            box-shadow: 0 0 5px rgba(139, 35, 35, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 25px;
+            font-family: "KaiTi", "STKaiti", "SimSun", "STSong", "Songti SC, serif";
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #8b2323;
+            color: #f5f0e6;
+        }
+
+        .btn-primary:hover {
+            background-color: #a52a2a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 35, 35, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #8b4513;
+            color: #f5f0e6;
+        }
+
+        .btn-secondary:hover {
+            background-color: #a0522d;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        .btn-success {
+            background-color: #2e8b57;
+            color: #f5f0e6;
+        }
+
+        .btn-success:hover {
+            background-color: #3cb371;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 139, 87, 0.3);
+        }
+
+        .output-section {
+            margin-top: 40px;
+            padding: 25px;
+            background-color: #faf6ef;
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+        }
+
+        .output-section h2 {
+            color: #8b2323;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .output-box {
+            background-color: #f5f0e6;
+            border: 1px solid #8b4513;
+            border-radius: 5px;
+            padding: 15px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .preview-section {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .preview-section h2 {
+            color: #8b2323;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .preview-iframe {
+            width: 100%;
+            max-width: 600px;
+            height: 700px;
+            border: 3px solid #8b4513;
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background-color: #2e8b57;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .preview-iframe {
+                height: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>新年祝福贺卡 - 生成器</h1>
+
+        <form id="generator-form">
+            <div class="form-group">
+                <label for="name">名字（可选）</label>
+                <input type="text" id="name" placeholder="例如：张">
+            </div>
+
+            <div class="form-group">
+                <label for="title">称呼</label>
+                <input type="text" id="title" placeholder="例如：老师、教授（默认：老师）">
+            </div>
+
+            <div class="form-group">
+                <label for="blessing">祝福语</label>
+                <textarea id="blessing" placeholder="例如：新春快乐，身体安康，桃李满天下，万事皆顺遂（默认值）"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="titleText">标题文字</label>
+                <input type="text" id="titleText" placeholder="例如：岁华新至，感念师恩（默认值）">
+            </div>
+
+            <div class="form-group">
+                <label for="signature">署名</label>
+                <input type="text" id="signature" placeholder="例如：Kevin Huang（默认值）">
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn-primary" onclick="generateUrl()">生成 URL</button>
+                <button type="button" class="btn-secondary" onclick="preview()">预览</button>
+                <button type="button" class="btn-success" onclick="exportSvg()">导出 SVG</button>
+                <button type="button" class="btn-success" onclick="exportPng()">导出 PNG</button>
+            </div>
+        </form>
+
+        <div class="output-section" id="output-section" style="display: none;">
+            <h2 id="output-title">生成的 URL</h2>
+            <div class="output-box" id="url-output"></div>
+            <div class="button-group">
+                <button type="button" class="btn-primary" onclick="copyUrl()">复制 URL</button>
+                <button type="button" class="btn-secondary" id="copy-markdown-btn" style="display: none;" onclick="copyMarkdown()">复制 Markdown</button>
+            </div>
+        </div>
+
+        <div class="preview-section" id="preview-section" style="display: none;">
+            <h2>预览</h2>
+            <iframe id="preview-iframe" class="preview-iframe"></iframe>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        function getBaseUrl() {
+            const protocol = window.location.protocol;
+            const host = window.location.host;
+            const path = window.location.pathname;
+            const basePath = path.substring(0, path.lastIndexOf('/'));
+            return `${protocol}//${host}${basePath}/index.html`;
+        }
+
+        function generateParams() {
+            const params = new URLSearchParams();
+            const name = document.getElementById('name').value.trim();
+            const title = document.getElementById('title').value.trim();
+            const blessing = document.getElementById('blessing').value.trim();
+            const titleText = document.getElementById('titleText').value.trim();
+            const signature = document.getElementById('signature').value.trim();
+
+            if (name) params.set('name', name);
+            if (title) params.set('title', title);
+            if (blessing) params.set('blessing', blessing);
+            if (titleText) params.set('title_text', titleText);
+            if (signature) params.set('signature', signature);
+
+            return params;
+        }
+
+        function generateUrl() {
+            const params = generateParams();
+            const baseUrl = getBaseUrl();
+            let url = baseUrl;
+            if (params.toString()) {
+                url += '?' + params.toString();
+            }
+
+            document.getElementById('output-title').textContent = '生成的 URL';
+            document.getElementById('url-output').textContent = url;
+            document.getElementById('output-section').style.display = 'block';
+            document.getElementById('preview-section').style.display = 'none';
+            document.getElementById('copy-markdown-btn').style.display = 'none';
+
+            showToast('URL 生成成功！');
+        }
+
+        function preview() {
+            const params = generateParams();
+            const baseUrl = getBaseUrl();
+            let url = baseUrl;
+            if (params.toString()) {
+                url += '?' + params.toString();
+            }
+
+            document.getElementById('preview-iframe').src = url;
+            document.getElementById('preview-section').style.display = 'block';
+            document.getElementById('output-section').style.display = 'none';
+
+            showToast('预览加载中...');
+        }
+
+        function exportSvg() {
+            const params = generateParams();
+            params.set('export_to_pic', 'true');
+            const baseUrl = getBaseUrl();
+            const url = baseUrl + '?' + params.toString();
+            
+            document.getElementById('output-title').textContent = '导出 SVG URL';
+            document.getElementById('url-output').textContent = url;
+            document.getElementById('output-section').style.display = 'block';
+            document.getElementById('preview-section').style.display = 'none';
+            document.getElementById('copy-markdown-btn').style.display = 'block';
+            
+            window.open(url, '_blank');
+            showToast('正在导出 SVG...');
+        }
+
+        function exportPng() {
+            const params = generateParams();
+            params.set('export_to_pic', 'true');
+            params.set('png', 'true');
+            const baseUrl = getBaseUrl();
+            const url = baseUrl + '?' + params.toString();
+            
+            document.getElementById('output-title').textContent = '导出 PNG URL';
+            document.getElementById('url-output').textContent = url;
+            document.getElementById('output-section').style.display = 'block';
+            document.getElementById('preview-section').style.display = 'none';
+            document.getElementById('copy-markdown-btn').style.display = 'block';
+            
+            window.open(url, '_blank');
+            showToast('正在导出 PNG...');
+        }
+
+        function copyUrl() {
+            const url = document.getElementById('url-output').textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('URL 已复制到剪贴板！');
+            }).catch(() => {
+                showToast('复制失败，请手动复制');
+            });
+        }
+
+        function copyMarkdown() {
+            const url = document.getElementById('url-output').textContent;
+            const markdown = `![新年祝福](${url})`;
+            navigator.clipboard.writeText(markdown).then(() => {
+                showToast('Markdown 已复制到剪贴板！');
+            }).catch(() => {
+                showToast('复制失败，请手动复制');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

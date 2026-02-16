@@ -10,9 +10,18 @@
 - 🏮 金色粒子飘落特效
 - 📝 红印章装饰
 - 📱 完美响应式设计，支持手机端浏览
-- 🔗 支持URL参数自定义内容
+- 🔗 支持 URL 参数自定义内容
+- 🖼️ 支持导出为 SVG 或 PNG 图片，可直接嵌入 markdown
 
 ## 使用方法
+
+### 图形化生成器（推荐）
+
+打开 `generate.html` 文件，通过表单填写信息即可：
+- 填写各项自定义内容
+- 点击「生成 URL」可复制链接或 Markdown
+- 点击「预览」可在页面内预览效果
+- 点击「导出 SVG」或「导出 PNG」直接下载图片
 
 ### 直接打开
 
@@ -27,6 +36,10 @@
 | `name` | 名字（可选） | - |
 | `title` | 称呼 | 老师 |
 | `blessing` | 祝福语 | 新春快乐，身体安康，桃李满天下，万事皆顺遂 |
+| `title_text` | 标题文字 | 岁华新至，感念师恩 |
+| `signature` | 署名 | Kevin Huang |
+| `export_to_pic` | 是否导出为图片模式 | false |
+| `png` | 导出为 PNG（仅在export_to_pic=true时有效） | false |
 
 ### 示例
 
@@ -43,8 +56,25 @@ index.html?name=张&title=教授
 # 自定义祝福语
 index.html?blessing=新年快乐，工作顺利，阖家幸福
 
+# 自定义标题和署名
+index.html?title_text=龙年大吉&signature=张三
+
 # 全部自定义
-index.html?name=李&title=老师&blessing=龙年大吉，万事如意，心想事成
+index.html?name=李&title=老师&blessing=龙年大吉，万事如意，心想事成&title_text=新春快乐&signature=李四
+
+# 导出为SVG图片
+index.html?export_to_pic=true&name=王&title=老师
+
+# 导出为PNG图片
+index.html?export_to_pic=true&png=true&name=王&title=老师
+```
+
+### Markdown嵌入
+
+可以直接将导出 URL 作为图片链接嵌入 markdown：
+
+```markdown
+![新年祝福](https://kevinhuangislearning.github.io/CNNYblessing/index.html?export_to_pic=true&name=张&title=老师)
 ```
 
 ## 技术栈
@@ -57,8 +87,9 @@ index.html?name=李&title=老师&blessing=龙年大吉，万事如意，心想�
 
 ```
 .
-├── index.html  # 主文件（包含HTML、CSS、JS）
-└── README.md   # 说明文档
+├── index.html    # 贺卡主页面
+├── generate.html # 图形化生成器页面
+└── README.md     # 说明文档
 ```
 
 ## 本地预览
@@ -73,7 +104,3 @@ python3 -m http.server 8000
 ```
 
 然后在浏览器中访问 `http://localhost:8000`
-
-## 署名
-
-Kevin Huang
