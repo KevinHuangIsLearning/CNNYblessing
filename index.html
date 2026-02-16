@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>岁华新至，感念师恩</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -226,6 +229,48 @@
             color: #333;
             text-align: left;
             overflow: hidden;
+        }
+
+        .message p {
+            margin: 0.5em 0;
+        }
+
+        .message strong {
+            color: #8b2323;
+        }
+
+        .message em {
+            font-style: italic;
+        }
+
+        .message ul, .message ol {
+            padding-left: 1.5em;
+            margin: 0.5em 0;
+        }
+
+        .message li {
+            margin: 0.25em 0;
+        }
+
+        .message code {
+            background-color: #e8e0d0;
+            padding: 0.1em 0.4em;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .message pre {
+            background-color: #e8e0d0;
+            padding: 1em;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 0.5em 0;
+        }
+
+        .message pre code {
+            background: none;
+            padding: 0;
         }
 
         .typing-text {
@@ -452,6 +497,28 @@
             return window.innerWidth <= 768 || window.innerHeight <= 650;
         }
 
+        function renderMarkdownWithKaTeX(text) {
+            let processed = text;
+            
+            processed = processed.replace(/\$\$([\s\S]+?)\$\$/g, (match, content) => {
+                try {
+                    return katex.renderToString(content, { displayMode: true, throwOnError: false });
+                } catch (e) {
+                    return match;
+                }
+            });
+            
+            processed = processed.replace(/\$([^\$\n]+?)\$/g, (match, content) => {
+                try {
+                    return katex.renderToString(content, { displayMode: false, throwOnError: false });
+                } catch (e) {
+                    return match;
+                }
+            });
+            
+            return marked.parse(processed);
+        }
+
         function typeWriter() {
             const { name, title, blessing, titleText, signature, message } = getUrlParams();
             
@@ -463,34 +530,38 @@
             const signatureElement = document.querySelector('.signature');
             signatureElement.textContent = signature;
             
-            let text;
+            const element = document.getElementById('typing');
+            
             if (message) {
-                text = message;
+                element.style.display = 'block';
+                element.style.borderRight = 'none';
+                setTimeout(() => {
+                    element.innerHTML = renderMarkdownWithKaTeX(message);
+                }, isSmallScreen() ? 2000 : 3000);
             } else {
                 let greeting = '亲爱的' + title;
                 if (name) {
                     greeting = '亲爱的' + name + title;
                 }
-                text = greeting + "，值此除夕佳节，感谢您过去的悉心教导。\n祝您：" + blessing + "。";
-            }
-            const element = document.getElementById('typing');
-            
-            let index = 0;
-            function type() {
-                if (index < text.length) {
-                    const char = text.charAt(index);
-                    if (char === '\n') {
-                        element.innerHTML += '<br>';
+                const text = greeting + "，值此除夕佳节，感谢您过去的悉心教导。\n祝您：" + blessing + "。";
+                
+                let index = 0;
+                function type() {
+                    if (index < text.length) {
+                        const char = text.charAt(index);
+                        if (char === '\n') {
+                            element.innerHTML += '<br>';
+                        } else {
+                            element.innerHTML += char;
+                        }
+                        index++;
+                        setTimeout(type, isSmallScreen() ? 50 : 100);
                     } else {
-                        element.innerHTML += char;
+                        element.style.borderRight = 'none';
                     }
-                    index++;
-                    setTimeout(type, isSmallScreen() ? 50 : 100);
-                } else {
-                    element.style.borderRight = 'none';
                 }
+                setTimeout(type, isSmallScreen() ? 2000 : 3000);
             }
-            setTimeout(type, isSmallScreen() ? 2000 : 3000);
         }
 
         function wrapText(text, maxChars) {
@@ -512,12 +583,26 @@
             return lines;
         }
 
+        function stripMarkdown(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '$1')
+                .replace(/\*(.*?)\*/g, '$1')
+                .replace(/`(.*?)`/g, '$1')
+                .replace(/\$\$([\s\S]+?)\$\$/g, '$1')
+                .replace(/\$([^\$\n]+?)\$/g, '$1')
+                .replace(/\[(.*?)\]\(.*?\)/g, '$1')
+                .replace(/^###?\s+/gm, '')
+                .replace(/^[-*+]\s+/gm, '')
+                .replace(/^\d+\.\s+/gm, '');
+        }
+
         function generateSVG(params) {
             const { name, title, blessing, titleText, signature, message } = params;
             let messageLines = [];
             
             if (message) {
-                const parts = message.split('\n');
+                const stripped = stripMarkdown(message);
+                const parts = stripped.split('\n');
                 parts.forEach(part => {
                     const lines = wrapText(part, 20);
                     messageLines = messageLines.concat(lines);

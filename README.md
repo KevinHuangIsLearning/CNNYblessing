@@ -17,6 +17,12 @@
 - 🔗 支持 URL 参数自定义内容
   - 简单模式：分块填写名字、称呼、祝福语
   - 高级模式：直接输入完整正文
+- ✍️ 高级模式支持完整 Markdown 语法和 LaTeX 数学公式
+  - 加粗：`**文字**`
+  - 斜体：`*文字*`
+  - 行内公式：`$E=mc^2$`
+  - 块级公式：`$$\int_0^\infty e^{-x^2}dx$$`
+  - 列表、代码等完整 Markdown 功能
 - 🖼️ 支持导出为 SVG 或 PNG 图片，可直接嵌入 markdown
 
 ## 使用方法
@@ -49,11 +55,21 @@
 
 #### 高级模式（完整正文）
 
+支持完整 Markdown 语法和 LaTeX 数学公式！
+
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
-| `message` | 完整正文（使用后忽略简单模式参数） | - |
+| `message` | 完整正文（支持 Markdown + LaTeX，使用后忽略简单模式参数） | - |
 | `title_text` | 标题文字 | 岁华新至，感念师恩 |
 | `signature` | 署名 | Kevin Huang |
+
+**Markdown 语法示例：**
+- 加粗：`**文字**`
+- 斜体：`*文字*`
+- 行内公式：`$E=mc^2$`
+- 块级公式：`$$\int_0^\infty e^{-x^2}dx = \frac{\sqrt{\pi}}{2}$$`
+- 列表：`- 项目` 或 `1. 项目`
+- 代码：`` `代码` ``
 
 #### 导出参数
 
@@ -86,6 +102,9 @@ index.html?name=李&title=老师&blessing=龙年大吉，万事如意，心想�
 # 完整正文自定义（高级模式）
 index.html?message=亲爱的老师，值此除夕佳节，感谢您过去的悉心教导。%0A祝您：新年快乐，万事顺遂。&title_text=新春快乐&signature=李四
 
+# Markdown + LaTeX 示例
+index.html?message=亲爱的**老师**，值此除夕佳节，感谢您过去的悉心教导。%0A%0A祝您：新年快乐，$e^{i\pi} + 1 = 0$，万事顺遂。%0A%0A**祝福列表：**%0A- 身体健康%0A- 工作顺利%0A- 桃李满天下&title_text=新春快乐&signature=李四
+
 # 导出为SVG图片
 index.html?export_to_pic=true&name=王&title=老师
 
@@ -105,7 +124,9 @@ index.html?export_to_pic=true&png=true&name=王&title=老师
 
 - HTML5
 - CSS3 (动画、响应式)
-- JavaScript (原生，无依赖)
+- JavaScript (原生)
+- Marked.js (Markdown 解析)
+- KaTeX (LaTeX 数学公式渲染)
 
 ## 项目结构
 
