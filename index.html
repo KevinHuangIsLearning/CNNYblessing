@@ -535,44 +535,41 @@
             
             const element = document.getElementById('typing');
             
+            let textToType;
             if (message) {
-                element.classList.add('with-cursor');
-                element.style.opacity = '0';
-                element.style.transition = 'opacity 1s ease';
-                element.innerHTML = renderMarkdownWithKaTeX(message);
-                
-                setTimeout(() => {
-                    element.style.opacity = '1';
-                }, isSmallScreen() ? 2000 : 3000);
-                
-                setTimeout(() => {
-                    element.classList.remove('with-cursor');
-                }, isSmallScreen() ? 3000 : 4000);
+                textToType = message;
             } else {
-                element.classList.add('with-cursor');
                 let greeting = '亲爱的' + title;
                 if (name) {
                     greeting = '亲爱的' + name + title;
                 }
-                const text = greeting + "，值此除夕佳节，感谢您过去的悉心教导。\n祝您：" + blessing + "。";
-                
-                let index = 0;
-                function type() {
-                    if (index < text.length) {
-                        const char = text.charAt(index);
-                        if (char === '\n') {
-                            element.innerHTML += '<br>';
-                        } else {
-                            element.innerHTML += char;
-                        }
-                        index++;
-                        setTimeout(type, isSmallScreen() ? 50 : 100);
+                textToType = greeting + "，值此除夕佳节，感谢您过去的悉心教导。\n祝您：" + blessing + "。";
+            }
+            
+            element.classList.add('with-cursor');
+            let index = 0;
+            
+            function type() {
+                if (index < textToType.length) {
+                    const char = textToType.charAt(index);
+                    if (char === '\n') {
+                        element.innerHTML += '<br>';
                     } else {
-                        element.classList.remove('with-cursor');
+                        element.innerHTML += char;
+                    }
+                    index++;
+                    setTimeout(type, isSmallScreen() ? 50 : 100);
+                } else {
+                    element.classList.remove('with-cursor');
+                    
+                    if (message) {
+                        setTimeout(() => {
+                            element.innerHTML = renderMarkdownWithKaTeX(message);
+                        }, 300);
                     }
                 }
-                setTimeout(type, isSmallScreen() ? 2000 : 3000);
             }
+            setTimeout(type, isSmallScreen() ? 2000 : 3000);
         }
 
         function wrapText(text, maxChars) {
