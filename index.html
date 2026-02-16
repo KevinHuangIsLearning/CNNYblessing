@@ -623,5 +623,57 @@
             handleExport();
         });
     </script>
+    
+    <style>
+        .footer-link {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            text-align: center;
+            opacity: 0;
+            animation: footerFadeIn 1s ease-out 7s forwards;
+        }
+        
+        .footer-link a {
+            color: #8b2323;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin: 0 10px;
+        }
+        
+        .footer-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer-link .divider {
+            color: #8b4513;
+            margin: 0 5px;
+        }
+        
+        @keyframes footerFadeIn {
+            to {
+                opacity: 0.7;
+            }
+        }
+    </style>
+    
+    <div class="footer-link" id="footer-link">
+        <a href="https://github.com/KevinHuangIsLearning/CNNYblessing" target="_blank">GitHub 仓库</a>
+        <span class="divider">|</span>
+        <a href="./generate.html">前往生成器制作自己的贺卡</a>
+        <span class="divider">|</span>
+        <span>MIT 协议</span>
+    </div>
+    
+    <script>
+        const params = getUrlParams();
+        if (!params.exportToPic) {
+            document.getElementById('footer-link').style.display = 'block';
+        } else {
+            document.getElementById('footer-link').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
