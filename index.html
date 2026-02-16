@@ -275,6 +275,9 @@
 
         .typing-text {
             display: inline;
+        }
+
+        .typing-text.with-cursor {
             border-right: 2px solid #8b2323;
             animation: blink 0.7s infinite;
         }
@@ -533,12 +536,20 @@
             const element = document.getElementById('typing');
             
             if (message) {
-                element.style.display = 'block';
-                element.style.borderRight = 'none';
+                element.classList.add('with-cursor');
+                element.style.opacity = '0';
+                element.style.transition = 'opacity 1s ease';
+                element.innerHTML = renderMarkdownWithKaTeX(message);
+                
                 setTimeout(() => {
-                    element.innerHTML = renderMarkdownWithKaTeX(message);
+                    element.style.opacity = '1';
                 }, isSmallScreen() ? 2000 : 3000);
+                
+                setTimeout(() => {
+                    element.classList.remove('with-cursor');
+                }, isSmallScreen() ? 3000 : 4000);
             } else {
+                element.classList.add('with-cursor');
                 let greeting = '亲爱的' + title;
                 if (name) {
                     greeting = '亲爱的' + name + title;
@@ -557,7 +568,7 @@
                         index++;
                         setTimeout(type, isSmallScreen() ? 50 : 100);
                     } else {
-                        element.style.borderRight = 'none';
+                        element.classList.remove('with-cursor');
                     }
                 }
                 setTimeout(type, isSmallScreen() ? 2000 : 3000);
